@@ -1,6 +1,7 @@
 import requests
 import paho.mqtt.client as mqtt
 import configparser
+from datetime import datetime
 
 #Load in the configuration file
 config = configparser.ConfigParser()
@@ -14,6 +15,7 @@ def on_connect(self, client, userdata, rc):
     # reconnect then subscriptions will be renewed.
     self.subscribe(config['MQTT']['mqtt-topic-prefix'])
 
+
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     api_key = config['IFTTT']['ifttt-api-key']
@@ -24,6 +26,14 @@ def on_message(client, userdata, msg):
     url = 'https://maker.ifttt.com/trigger/{e}/with/key/{k}/'.format(e=event,k=api_key)
     payload = {'value1': value1, 'value2': value2, 'value3': value3}
     requests.post(url, data=payload)
+    print('----------------------------------------------------------------------')
+    #print('Event From    : ')
+    print('Time Received : ' + str(datetime.now()))
+    print('Payload')
+    print('----------------------------------------------------------------------')
+    print(str(msg.payload))
+    print('----------------------------------------------------------------------')
+    print('*************************** - EOM - **********************************')
 
 # Get the MQTT values from the config
 username = config['MQTT']['mqtt-username']
