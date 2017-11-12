@@ -1,7 +1,13 @@
+# Installing dependencies
+# pip install requests
+# pip install paho-mqtt
+# pip install configparser
+
 import requests
 import paho.mqtt.client as mqtt
 import configparser
 from datetime import datetime
+
 
 #Load in the configuration file
 config = configparser.ConfigParser()
