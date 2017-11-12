@@ -11,6 +11,7 @@ config.read('config.ini')
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(self, client, userdata, rc):
     print("Connected with result code "+str(rc))
+    print('*************************** - EOM - **********************************')
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     self.subscribe(config['MQTT']['mqtt-topic-prefix'])
@@ -26,12 +27,12 @@ def on_message(client, userdata, msg):
     url = 'https://maker.ifttt.com/trigger/{e}/with/key/{k}/'.format(e=event,k=api_key)
     payload = {'value1': value1, 'value2': value2, 'value3': value3}
     requests.post(url, data=payload)
-    print('----------------------------------------------------------------------')
+    #print('----------------------------------------------------------------------')
     #print('Event From    : ')
-    print('Time Received : ' + str(datetime.now()))
-    print('Payload')
+    print('Time Event Received : ' + str(datetime.now()))
+    #print('Payload')
     print('----------------------------------------------------------------------')
-    print(str(msg.payload))
+    print(str(msg.payload.decode("utf-8")))
     print('----------------------------------------------------------------------')
     print('*************************** - EOM - **********************************')
 
