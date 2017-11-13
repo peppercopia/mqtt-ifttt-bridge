@@ -16,12 +16,17 @@ config.read('config.ini')
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(self, client, userdata, rc):
+    path = 'eventlog.txt'
+    eventLog = open(path, 'a')
     print("Connected with result code "+str(rc))
-    print('*************************** - EOM - **********************************')
+    eventLog.write('********************* - Monitor Started - ****************************\n')
+    eventLog.write('Monitor Start Time : ' + str(datetime.now()) + '\n')
+    eventLog.write('*************************** - EOM - **********************************\n')
+    eventLog.close()
+
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     self.subscribe(config['MQTT']['mqtt-topic-prefix'])
-
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
@@ -33,14 +38,16 @@ def on_message(client, userdata, msg):
     url = 'https://maker.ifttt.com/trigger/{e}/with/key/{k}/'.format(e=event,k=api_key)
     payload = {'value1': value1, 'value2': value2, 'value3': value3}
     requests.post(url, data=payload)
-    #print('----------------------------------------------------------------------')
-    #print('Event From    : ')
-    print('Time Event Received : ' + str(datetime.now()))
-    #print('Payload')
-    print('----------------------------------------------------------------------')
-    print(str(msg.payload.decode("utf-8")))
-    print('----------------------------------------------------------------------')
-    print('*************************** - EOM - **********************************')
+
+    path = 'eventlog.txt'
+    eventLog = open(path, 'a')
+    eventLog.write('----------------------------------------------------------------------\n')
+    eventLog.write('Time Event Received : ' + str(datetime.now()) + '\n')
+    eventLog.write('----------------------------------------------------------------------\n')
+    eventLog.write(str(msg.payload.decode("utf-8"))+ '\n')
+    eventLog.write('----------------------------------------------------------------------\n')
+    eventLog.write('*************************** - EOM - **********************************\n')
+    eventLog.close()
 
 # Get the MQTT values from the config
 username = config['MQTT']['mqtt-username']
